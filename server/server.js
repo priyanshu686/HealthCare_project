@@ -22,7 +22,10 @@
 const express = require('express');
 const connectDb = require("./config/dbConnection");
 const errorHandler = require("./middlewares/errorHandler");
-const cors = require("cors");
+const cors = require("cors");     // 
+
+const dotenv = require("dotenv");    //
+dotenv.config();
 
 connectDb();
 const app = express();
