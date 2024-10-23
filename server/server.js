@@ -43,6 +43,9 @@ app.get('/',(req,res)=>{
     res.send("Working");
 })
 
+app.get("/home",(req,res)=>{
+    res.render("home",{})
+})
 
 app.set('view engine','hbs');
 
