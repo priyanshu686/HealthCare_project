@@ -42,7 +42,11 @@ app.use(errorHandler);
 app.get('/',(req,res)=>{
     res.send("Working");
 })
-
+app.get("/allusers",(req,res)=>{
+    res.render("user",{
+        users:[{id:1,username:"Nitiesh",age:23},{id:2,username:"Akash",age:23}]
+    })
+})
 app.get("/home",(req,res)=>{
     res.render("home",{})
 })
