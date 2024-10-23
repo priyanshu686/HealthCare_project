@@ -43,8 +43,11 @@ app.get('/',(req,res)=>{
     res.send("Working");
 })
 
+
+app.set('view engine','hbs');
+
 // App Config Start 
 app.listen(port,()=>{
-    console.log('Server running on port http://localhost:${port}');
+    console.log(`Server running on port http://localhost:${port}`);
 });
 
