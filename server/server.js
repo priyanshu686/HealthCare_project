@@ -28,6 +28,9 @@ const hbs = require("hbs");
 const path = require("path");
 hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
+// Route for User Registration and Authentication
+app.use("/api/register",require("./router/userRoutes"));
+
 const dotenv = require("dotenv");
 dotenv.config();
 
