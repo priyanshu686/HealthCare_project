@@ -26,6 +26,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 const hbs = require("hbs");
 const path = require("path");
+hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -71,7 +72,7 @@ app.get("/allusers",(req,res)=>{
     })
 })
 
-hbs.registerPartials(path.join(__dirname, '/views/partials'));
+
 
 // APP CONFIG START
 app.listen(port, () => {
