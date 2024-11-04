@@ -47,7 +47,7 @@ app.use(errorHandler);
 app.set('view engine', 'hbs');
  
 // Route for User Registration and Authentication
-app.use("/api/register",require("./router/userRoutes"));
+app.use("/api/user",require("./router/userRoutes"));
 
 //ROUTES BELOW
 app.get('/',(req,res)=>{
