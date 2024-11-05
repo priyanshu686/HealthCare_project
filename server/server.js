@@ -8,6 +8,8 @@ const path = require("path");
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const doctorRoutes = require("./routes/doctorRoutes");
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' })
 
 const dotenv = require("dotenv");
 dotenv.config();
