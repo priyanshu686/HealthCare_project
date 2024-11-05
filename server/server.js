@@ -1,24 +1,3 @@
-// Express Check
-// const express = require('express');
-// const app = express();
-// const PORT = 3000;
-
-// // Middleware (optional)
-// app.use(express.json());
-
-// // Define a simple route
-// app.get('/', (req, res) => {
-//   res.send('Hello, World!');
-// });
-
-// // Start the server
-// app.listen(PORT, () => {
-
-//   console.log(`Server is running on http://localhost:${PORT}`);
-// });
-
-// FrameWork 
-// Import express
 //Framework Configuration
 const express = require("express");
 const connectDb = require("./config/dbConnection");
@@ -26,8 +5,9 @@ const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 const hbs = require("hbs");
 const path = require("path");
-hbs.registerPartials(path.join(__dirname, '/views/partials'));
-
+const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcrypt');
+const doctorRoutes = require("./routes/doctorRoutes");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -41,13 +21,14 @@ app.use(cors());
 
 app.use(errorHandler);
 
+app.use('/api/register', require("./routes/userRoutes"));
+app.use('/api/doctors', require("./routes/doctorRoutes"));
+
 // ERROR handling middleware
 app.use(errorHandler);
 
 app.set('view engine', 'hbs');
- 
-// Route for User Registration and Authentication
-app.use("/api/user",require("./router/userRoutes"));
+
 
 //ROUTES BELOW
 app.get('/',(req,res)=>{
@@ -75,9 +56,9 @@ app.get("/allusers",(req,res)=>{
     })
 })
 
-
+hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
 // APP CONFIG START
-app.listen(port, () => {
-    console.log(`Server running on port http://localhost:${port}`);
+app.listen(port, () =>{
+    console.log(`Server running in port http://localhost:${port}`);
 });

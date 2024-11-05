@@ -1,30 +1,39 @@
 const mongoose = require("mongoose");
-
-const userSchema = mongoose.Schema(
-    {
-        email: {
-            type: String,
-            required: [true, "Please add your email"],
-            unique: true, 
-            match: [/.+@.+\..+/, "Please enter a valid email"], 
-        },
-        name: {
-            type: String,
-            required: [true, "Please add your name"],
-        },
-        dob: {
-            type: Date,
-            required: [true, "Please add your date of birth"],
-        },
-        number: {
-            type: String,
-            required: [true, "Please add your phone number"],
-            match: [/^\d{10}$/, "Please enter a valid 10-digit phone number"], 
-        },
+const userSchema = mongoose.Schema({
+    firstName:{
+        type : String , 
+        require : [ true , "please add your name"],
     },
-    {
-        timestamps: true,
+    lastName:{
+        type : String , 
+        require : [ true , "please add your last name"],
+    },
+    email:{
+        type : String , 
+        require : [ true , "please add your last name"],
+    },
+    age:{
+        type : Number , 
+        require : [ true , "please add your age"],
+    },
+    bloodGroup:{
+        type : String , 
+        require : [ true , "please add your bloodgroup"],
+    },
+    gender:{
+        type : String , 
+        require : [ true , "please add your gender"],
+    },
+    phoneNumber:{
+        type : Number , 
+        require : [ true , "please add your phone number"],
+    },
+    password:{
+        type : String,
+        require : [ true , "please add your passwprd"],
     }
-);
-
-module.exports = mongoose.model("User", userSchema);
+},
+{
+    timestamps : true ,
+});
+module.exports = mongoose.model("User" , userSchema);
