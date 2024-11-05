@@ -1,18 +1,18 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
+const User = require("../model/userModel"); // Corrected variable name to 'User'
 require("dotenv").config();
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { email, name, dob, number, password } = req.body;
+    const { firstName, lastName, age, gender, bloodGroup, email, phoneNumber, password } = req.body;
 
-    // Check if all fields are provided
-    if (!email || !name || !dob || !number || !password) {
+    // Validate all required fields
+    if (!firstName || !lastName || !age || !gender || !bloodGroup || !email || !phoneNumber || !password) {
         res.status(400);
-        throw new Error("Please provide all fields");
+        throw new Error("Please fill all fields");
     }
 
-    // Check if user already exists
+    // Check if the user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
         return res.status(400).json({ message: "User already exists" });
@@ -22,17 +22,19 @@ const registerUser = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create the user
-    const user = await User.create({
+    // Create a new user
+    const newUser = await User.create({
+        firstName,
+        lastName,
+        age,
+        gender,
+        bloodGroup,
         email,
-        name,
-        dob,
-        number,
-        password: hashedPassword, // Store the hashed password
+        phoneNumber,
+        password: hashedPassword,
     });
 
-    res.status(201).json({ message: "User registered successfully", user });
+    res.status(201).json({ message: "User registered successfully", user: newUser });
 });
-
 
 module.exports = { registerUser };
