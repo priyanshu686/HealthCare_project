@@ -43,4 +43,3 @@ Expected Response (if the doctor is successfully deleted):
 {
     "message": "Doctor deleted successfully"
 }
-
