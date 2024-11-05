@@ -60,6 +60,13 @@ app.get("/allusers",(req,res)=>{
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
+app.post('/profile', upload.single('avatar'), function (req, res, next) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+    console.log(req.body);
+    console.log(req.file);
+  })
+
 // APP CONFIG START
 app.listen(port, () =>{
     console.log(`Server running in port http://localhost:${port}`);
