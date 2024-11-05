@@ -7,7 +7,7 @@ const hbs = require("hbs");
 const path = require("path");
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
-const doctorRoutes = require("./routes/doctorRoutes");
+const doctorRoutes = require("./router/doctorRoutes");
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' })
 
@@ -23,8 +23,8 @@ app.use(cors());
 
 app.use(errorHandler);
 
-app.use('/api/register', require("./routes/userRoutes"));
-app.use('/api/doctors', require("./routes/doctorRoutes"));
+app.use('/api/register', require("./router/userRoutes"));
+app.use('/api/doctors', require("./router/doctorRoutes"));
 
 // ERROR handling middleware
 app.use(errorHandler);

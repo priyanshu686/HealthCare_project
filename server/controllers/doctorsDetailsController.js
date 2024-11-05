@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Doctor = require("../model/doctorDetailsModel"); // Make sure to create this model
+const Doctor = require("../models/doctorDetailsModel"); // Make sure to create this model
 require("dotenv").config();
 
 const registerDoctor = asyncHandler(async (req, res) => {
