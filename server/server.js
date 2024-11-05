@@ -1,4 +1,4 @@
-//Framework Configuration
+// Import required modules
 const express = require("express");
 const connectDb = require("./config/dbConnection");
 const errorHandler = require("./middlewares/errorHandler");
@@ -9,66 +9,85 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const doctorRoutes = require("./router/doctorRoutes");
 const multer  = require('multer');
-const upload = multer({ dest: 'uploads/' })
-
 const dotenv = require("dotenv");
+
+// Initialize environment variables
 dotenv.config();
 
+// Connect to database
 connectDb();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Configure express middlewares
 app.use(express.json());
 app.use(cors());
-
 app.use(errorHandler);
 
+// Register routes
 app.use('/api/register', require("./router/userRoutes"));
 app.use('/api/doctors', require("./router/doctorRoutes"));
+
+// Set the view engine
+app.set('view engine', 'hbs');
+
+// Multer Disk Storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Define the folder where files will be stored
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    // Define how the file will be named (unique identifier)
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+// Multer upload setup using disk storage
+const upload = multer({ storage: storage });
 
 // ERROR handling middleware
 app.use(errorHandler);
 
-app.set('view engine', 'hbs');
-
-
-//ROUTES BELOW
-app.get('/',(req,res)=>{
+// Routes
+app.get('/', (req, res) => {
     res.send("working");
 });
 
-app.get("/home",(req,res)=>{
-    res.render("home",{
+app.get("/home", (req, res) => {
+    res.render("home", {
         users: [
             { username: "Parth", date: "23-10-2024", subject: "Maths" },
             { username: "Aarav", date: "23-10-2024", subject: "Science" },
             { username: "Ishita", date: "23-10-2024", subject: "History" }
         ]
-    })
-})
+    });
+});
 
-
-app.get("/allusers",(req,res)=>{
-    res.render("users",{
+app.get("/allusers", (req, res) => {
+    res.render("users", {
         users: [
             { username: "Parth", date: "23-10-2024", subject: "Maths" },
             { username: "Aarav", date: "23-10-2024", subject: "Science" },
             { username: "Ishita", date: "23-10-2024", subject: "History" }
         ]
-    })
-})
+    });
+});
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
+// Profile upload route
 app.post('/profile', upload.single('avatar'), function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
-    console.log(req.body);
-    console.log(req.file);
-    return res.redirect("/home")
-  })
+    // req.file contains the uploaded file information
+    console.log(req.body);  // Text fields (if any)
+    console.log(req.file);   // File info (name, path, etc.)
+    
+    // Redirect to /home after the upload
+    return res.redirect("/home");
+});
 
-// APP CONFIG START
-app.listen(port, () =>{
-    console.log(`Server running in port http://localhost:${port}`);
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
 });
