@@ -10,8 +10,8 @@ const bcrypt = require('bcrypt');
 const doctorRoutes = require("./router/doctorRoutes");
 const multer  = require('multer');
 const dotenv = require("dotenv");
-const uploads =multer({dest:'uploads/'})
-const Profie = require("./models/Profile");
+const uploads =multer({dest:'uploads/'});
+const Profile = require("./models/Profile");
 
 // Initialize environment variables
 dotenv.config();
@@ -39,7 +39,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Store the file in the 'uploads' directory
-        cb(null, path.join(__dirname, 'uploads'));
+        cb(null, './uploads');
     },
     filename: function (req, file, cb) {
         // Generate a unique file name with a timestamp and random number
@@ -101,7 +101,7 @@ app.post("/profile", upload.single("avatar"), async (req, res, next) => {
 
     try {
         // Save the uploaded image path to the database (Profie model)
-        const newProfile = new Profie({ image: req.file.path });
+        const newProfile = new Profile({ image: req.file.path });
         await newProfile.save();
 
         // Redirect or render the profile view with the uploaded image
