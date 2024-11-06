@@ -10,6 +10,8 @@ const bcrypt = require('bcrypt');
 const doctorRoutes = require("./router/doctorRoutes");
 const multer  = require('multer');
 const dotenv = require("dotenv");
+const uploads =multer({dest:'uploads/'})
+const Profie = require("./models/Profile");
 
 // Initialize environment variables
 dotenv.config();
@@ -32,17 +34,7 @@ app.use('/api/doctors', require("./router/doctorRoutes"));
 // Set the view engine
 app.set('view engine', 'hbs');
 
-// // Multer Disk Storage configuration
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     // Define the folder where files will be stored
-//     cb(null, 'uploads/');
-//   },
-//   filename: function (req, file, cb) {
-//     // Define how the file will be named (unique identifier)
-//     cb(null, Date.now() + '-' + file.originalname);
-//   }
-// });
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -94,15 +86,31 @@ app.get("/allusers", (req, res) => {
 hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
 // Profile upload route
-app.post('/profile', upload.single('avatar'), function (req, res, next) {
-    // req.file contains the uploaded file information
-    console.log(req.body);  // Text fields (if any)
-    console.log(req.file);   // File info (name, path, etc.)
+// app.post('/profile', upload.single('avatar'), function (req, res, next) {
+//     // req.file contains the uploaded file information
+//     console.log(req.body);  // Text fields (if any)
+//     console.log(req.file);   // File info (name, path, etc.)
     
-    // Redirect to /home after the upload
-    return res.redirect("/home");
-});
+//     // Redirect to /home after the upload
+//     return res.redirect("/home");
+// });
 
+app.post("/profile", upload.single("avatar"), async (req, res, next) => {
+    console.log(req.body); // Log the uploaded fields (if any)
+    console.log(req.file); // Log the uploaded file object
+
+    try {
+        // Save the uploaded image path to the database (Profie model)
+        const newProfile = new Profie({ image: req.file.path });
+        await newProfile.save();
+
+        // Redirect or render the profile view with the uploaded image
+        res.render("profile", { image: req.file.path });
+    } catch (err) {
+        console.error("Error saving profile:", err);
+        next(err);
+    }
+});
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
