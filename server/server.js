@@ -32,17 +32,33 @@ app.use('/api/doctors', require("./router/doctorRoutes"));
 // Set the view engine
 app.set('view engine', 'hbs');
 
-// Multer Disk Storage configuration
+// // Multer Disk Storage configuration
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     // Define the folder where files will be stored
+//     cb(null, 'uploads/');
+//   },
+//   filename: function (req, file, cb) {
+//     // Define how the file will be named (unique identifier)
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Define the folder where files will be stored
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    // Define how the file will be named (unique identifier)
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function (req, file, cb) {
+        // Store the file in the 'uploads' directory
+        cb(null, path.join(__dirname, 'uploads'));
+    },
+    filename: function (req, file, cb) {
+        // Generate a unique file name with a timestamp and random number
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+
+        // Append the file extension from the original file's name
+        const fileExtension = path.extname(file.originalname); // Extract file extension
+        cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension); // Save with extension
+    }
 });
+  
 
 // Multer upload setup using disk storage
 const upload = multer({ storage: storage });
