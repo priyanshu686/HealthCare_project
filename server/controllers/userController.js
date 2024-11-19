@@ -69,4 +69,42 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   });
 
-module.exports = { registerUser, loginUser };
+
+const getUserProfile = asyncHandler(async(req,res)=>{
+   const {email} = req.body;
+   const data = await User.findOne({email});
+   if(!data) return res.status(401).json({error:"Not Found"});
+   return res.status(200).json({Data});
+});
+
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const {email} = req.body; 
+  const { firstName, lastName, age, gender, bloodGroup, phoneNumber, password } = req.body;
+
+  
+  const data = await User.findById({email});
+
+  if (!data) {
+      return res.status(401).json({ message: "User not found" });
+  }
+  if (password) {
+      const salt = await bcrypt.genSalt(10);
+      data.password = await bcrypt.hash(password, salt);
+  }
+  data.firstName = firstName || data.firstName;
+  data.lastName = lastName || data.lastName;
+  data.email = email || data.email;
+  data.age = age || data.age;
+  data.gender = gender || data.gender;
+  data.bloodGroup = bloodGroup || data.bloodGroup;
+  data.phoneNumber = phoneNumber || data.phoneNumber;
+
+  const updatedUser = await data.save(); 
+
+  res.json({
+      message: "Profile updated successfully",
+      user: updatedUser
+  });
+});
+module.exports = { registerUser, loginUser,getUserProfile ,updateUserProfile};
